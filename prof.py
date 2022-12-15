@@ -2,8 +2,7 @@ import sys
 import sqlite3
 from PyQt5.QtCore import Qt, QSize
 from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QScrollArea, QGroupBox, QLabel, QLineEdit, QVBoxLayout, \
-    QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QScrollArea, QGroupBox, QLabel, QLineEdit, QVBoxLayout, QPushButton
 
 con = sqlite3.connect("maths_db.sqlite")
 
@@ -171,11 +170,15 @@ class Journals(QMainWindow):
     def set_task(self):
         cur = con.cursor()
         task = self.name
-        self.data = cur.execute("""SELECT * FROM task_answer, tasks_theme
+        command = f"""SELECT * FROM task_answer, tasks_theme
                                     WHERE theme_id = task_id AND
                                     temp_answer = 0 AND
-                                    task_var =:task""", {"task": task}).fetchall()
-        print(self.data)
+                                    task_var = '{task}'"""
+        # self.data = cur.execute("""SELECT * FROM task_answer, tasks_theme
+        #                             WHERE theme_id = task_id AND
+        #                             temp_answer = 0 AND
+        #                             task_var =:task""", {"task": task}).fetchall()
+        self.data = cur.execute(command).fetchall()
         self.layout = QVBoxLayout()
 
         for i, el in enumerate(self.data):
@@ -204,7 +207,7 @@ class Journals(QMainWindow):
         return groupBox
 
     def back_to_profs(self):
-        # возвращает обратно к списку профессий
+        # возвращает обратно к списку тем задач
         self.profs_wnd = Profs()
         self.profs_wnd.show()
         self.profs_wnd.move(self.pos())
