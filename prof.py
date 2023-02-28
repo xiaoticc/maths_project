@@ -3,7 +3,7 @@ import sqlite3
 from PyQt5.QtCore import Qt, QSize
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow, QScrollArea, QGroupBox, QLabel, QLineEdit, QVBoxLayout, \
-    QPushButton
+    QPushButton, QMessageBox
 
 con = sqlite3.connect("maths_db.sqlite")
 
@@ -233,7 +233,14 @@ class Journals(QMainWindow):
             self.sender().setStyleSheet("color: rgb(255, 0, 0);")
 
     def show_solution(self, num_question):
-        pass
+        solution = QMessageBox()
+        solution.setWindowTitle("решение")
+        solution.setText("Здесь могло быть ваше решение")
+        solution.setStandardButtons(QMessageBox.Ok)
+        solution.setInformativeText('нужно подключить к базе данных решения, но пока что это сделано не было')
+        solution.setDetailedText('детали детали')
+
+        solution.exec_()
 
 
 # нужная вещь для отображения ошибок не кодами возврата
