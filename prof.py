@@ -200,8 +200,8 @@ class Journals(QMainWindow):
         label = QLabel(name, self)
         label.setWordWrap(True)
         self.line_edit = QLineEdit(self)
-        # сделать QPushButton и по нажатию на кнопку переходить на doSomething
-        # или!! оставить изменение цвета, при вводе правильного или неправильного ответа,а на кнопку сделать показ решения
+        # сделать QPushButton и по нажатию на кнопку переходить на doSomething или!! оставить изменение цвета,
+        # при вводе правильного или неправильного ответа,а на кнопку сделать показ решения
         # событие на изменение line_edit
         self.btn_answ = QPushButton("Правильный ответ", self)
         self.line_edit.textChanged.connect(lambda x: self.doSomething(num - 1))
@@ -233,14 +233,15 @@ class Journals(QMainWindow):
             self.sender().setStyleSheet("color: rgb(255, 0, 0);")
 
     def show_solution(self, num_question):
-        solution = QMessageBox()
-        solution.setWindowTitle("решение")
-        solution.setText("Здесь могло быть ваше решение")
-        solution.setStandardButtons(QMessageBox.Ok)
-        solution.setInformativeText('нужно подключить к базе данных решения, но пока что это сделано не было')
-        solution.setDetailedText('детали детали')
+        solution_box = QMessageBox()
+        solution_box.setWindowTitle("решение")
+        solution = str(self.data[num_question][4])
+        solution_box.setText("Здесь могло быть ваше решение")
+        solution_box.setStandardButtons(QMessageBox.Ok)
+        solution_box.setInformativeText(solution)
+        solution_box.setDetailedText('детали детали')
 
-        solution.exec_()
+        solution_box.exec_()
 
 
 # нужная вещь для отображения ошибок не кодами возврата
