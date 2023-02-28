@@ -2,7 +2,8 @@ import sys
 import sqlite3
 from PyQt5.QtCore import Qt, QSize
 from PyQt5 import uic
-from PyQt5.QtWidgets import QApplication, QMainWindow, QScrollArea, QGroupBox, QLabel, QLineEdit, QVBoxLayout, QPushButton
+from PyQt5.QtWidgets import QApplication, QMainWindow, QScrollArea, QGroupBox, QLabel, QLineEdit, QVBoxLayout, \
+    QPushButton
 
 con = sqlite3.connect("maths_db.sqlite")
 
@@ -28,7 +29,7 @@ class Possibilities(QMainWindow):
         uic.loadUi('possibilities.ui', self)
         # подгружаем дизайн
         self.btn_test.clicked.connect(self.open_test)
-        self.btn_prof.clicked.connect(self.open_profs)
+        self.btn_prof.clicked.connect(self.open_tasks)
 
     def open_test(self):
         # открытие теста
@@ -37,11 +38,11 @@ class Possibilities(QMainWindow):
         self.test_window.move(self.pos())
         self.hide()
 
-    def open_profs(self):
+    def open_tasks(self):
         # открытие списка профессий
-        self.profs_window = Profs()
-        self.profs_window.show()
-        self.profs_window.move(self.pos())
+        self.tasks_window = Tasks()
+        self.tasks_window.show()
+        self.tasks_window.move(self.pos())
         self.hide()
 
 
@@ -55,11 +56,10 @@ class Test(QMainWindow):
 
     def set_temp_task(self):
         cur = con.cursor()
-
         self.data = cur.execute("""SELECT * FROM task_answer, tasks_theme
                                     WHERE theme_id = task_id AND
                                     temp_answer = 1""").fetchall()
-        print(self.data)
+        # print(self.data)
         self.layout = QVBoxLayout()
 
         for i, el in enumerate(self.data):
@@ -86,7 +86,6 @@ class Test(QMainWindow):
 
     def open_res(self):
         # открытие результатов теста
-
         self.res_window = Results(*self.results())
         self.res_window.show()
         self.res_window.move(self.pos())
@@ -109,7 +108,9 @@ class Test(QMainWindow):
         # print(self.layout.itemAt(0).widget().findChildren(QLineEdit)[0].text())
 
 
-class Profs(QMainWindow):
+# Profs - Tasks
+
+class Tasks(QMainWindow):
     def __init__(self):
         super().__init__()
         uic.loadUi('profs.ui', self)
@@ -134,8 +135,8 @@ class Profs(QMainWindow):
         self.close()
 
 
-class Results(Profs):
-    # наследуется от класса Profs, тк у них действует один и тот же метод возвращения в главное меню
+class Results(Tasks):
+    # наследуется от класса Tasks, тк у них действует один и тот же метод возвращения в главное меню
     def __init__(self, right, wrong_theme, pos_wnd=None):
         super().__init__()
         uic.loadUi('results.ui', self)
@@ -162,18 +163,18 @@ class Journals(QMainWindow):
         uic.loadUi('journals.ui', self)
         # подгружаем дизайн
         self.name = name
-        self.btn_return.clicked.connect(self.back_to_profs)
+        self.btn_return.clicked.connect(self.back_to_tasks)
         self.set_task()
-        for el in self.layout.itemAt(0).widget().findChildren(QLineEdit):
-            print(1)
+        # for el in self.layout.itemAt(0).widget().findChildren(QLineEdit):
+        #     print(1)
 
     def set_task(self):
         cur = con.cursor()
-        task = self.name
+        # task = self.name
         command = f"""SELECT * FROM task_answer, tasks_theme
                                     WHERE theme_id = task_id AND
                                     temp_answer = 0 AND
-                                    task_var = '{task}'"""
+                                    task_var = '{self.name}'"""
         # self.data = cur.execute("""SELECT * FROM task_answer, tasks_theme
         #                             WHERE theme_id = task_id AND
         #                             temp_answer = 0 AND
@@ -192,28 +193,37 @@ class Journals(QMainWindow):
     def create_ui_answer(self, num, name):
         layout = QVBoxLayout()
         groupBox = QGroupBox(f"Вопрос {num}")
-        print(num)
+        # print(num)
         self.label.setText(f'Тренажер на тему: {self.name}')
         groupBox.setMinimumHeight(200)
         groupBox.setMinimumWidth(300)
         label = QLabel(name, self)
         label.setWordWrap(True)
-        line_edit = QLineEdit(self)
+        self.line_edit = QLineEdit(self)
+        # сделать QPushButton и по нажатию на кнопку переходить на doSomething
+        # или!! оставить изменение цвета, при вводе правильного или неправильного ответа,а на кнопку сделать показ решения
         # событие на изменение line_edit
-        line_edit.textChanged.connect(lambda x: self.doSomething(num - 1))
+        self.btn_answ = QPushButton("Правильный ответ", self)
+        self.line_edit.textChanged.connect(lambda x: self.doSomething(num - 1))
+        self.btn_answ.clicked.connect(lambda x: self.show_solution(num - 1))
         layout.addWidget(label)
-        layout.addWidget(line_edit)
+        layout.addWidget(self.line_edit)
+        layout.addWidget(self.btn_answ)
         groupBox.setLayout(layout)
         return groupBox
 
-    def back_to_profs(self):
+    def back_to_tasks(self):
         # возвращает обратно к списку тем задач
-        self.profs_wnd = Profs()
+        self.profs_wnd = Tasks()
         self.profs_wnd.show()
         self.profs_wnd.move(self.pos())
         self.close()
 
     def doSomething(self, num_question):
+        # ПОМЕНЯТЬ!! может быть сделать MessageBox, для создания всплывающего окна,
+        # которое будет показывать правильный ответ после нажатия на кнопку проверить ответ
+        # кстати, можно в messagebox поместить кнопку, которая будет показывать решение задачи
+        # (если в модулях будет решение, написанное словами, а не картинками)
         user_answer = self.sender().text()
         right_answer = str(self.data[num_question][3])
         print(right_answer, user_answer, self.data[num_question][3])
@@ -221,6 +231,9 @@ class Journals(QMainWindow):
             self.sender().setStyleSheet("color: rgb(0, 255, 0);")
         else:
             self.sender().setStyleSheet("color: rgb(255, 0, 0);")
+
+    def show_solution(self, num_question):
+        pass
 
 
 # нужная вещь для отображения ошибок не кодами возврата
