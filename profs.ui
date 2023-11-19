@@ -170,6 +170,34 @@ QPushbutton:pressed {
        </attribute>
       </widget>
      </item>
+     <item>
+      <widget class="QPushButton" name="btn_pr4">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">QPushButton {
+	background-color: rgb(145, 182, 182);
+	border-width: 2px;
+	border-radius: 15px;
+}
+
+QPushbutton:pressed {
+	background-color: white
+
+}</string>
+       </property>
+       <property name="text">
+        <string>еще модули  пока что в доработке</string>
+       </property>
+       <attribute name="buttonGroup">
+        <string notr="true">prof_buttons</string>
+       </attribute>
+      </widget>
+     </item>
     </layout>
    </widget>
    <widget class="QPushButton" name="btn_mainp">

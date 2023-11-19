@@ -9,11 +9,13 @@ con = sqlite3.connect("maths_db.sqlite")
 
 
 class Main(QMainWindow):
+    # основное окно
     def __init__(self):
         super().__init__()
         uic.loadUi('main.ui', self)
         # подгружаем дизайн
         self.btn_ent.clicked.connect(self.open_pos)
+        print('main')
 
     def open_pos(self):
         # открытие следующего окна
@@ -24,12 +26,14 @@ class Main(QMainWindow):
 
 
 class Possibilities(QMainWindow):
+    # пройти тест - перейти к заданиям
     def __init__(self):
         super().__init__()
         uic.loadUi('possibilities.ui', self)
         # подгружаем дизайн
         self.btn_test.clicked.connect(self.open_test)
         self.btn_prof.clicked.connect(self.open_tasks)
+        print('possib')
 
     def open_test(self):
         # открытие теста
@@ -39,7 +43,7 @@ class Possibilities(QMainWindow):
         self.hide()
 
     def open_tasks(self):
-        # открытие списка профессий
+        # открытие списка задач
         self.tasks_window = Tasks()
         self.tasks_window.show()
         self.tasks_window.move(self.pos())
@@ -47,12 +51,14 @@ class Possibilities(QMainWindow):
 
 
 class Test(QMainWindow):
+    # тестирование
     def __init__(self):
         super().__init__()
         uic.loadUi('test.ui', self)
         # подгружаем дизайн
         self.btn_endt.clicked.connect(self.open_res)
         self.set_temp_task()
+        print('test')
 
     def set_temp_task(self):
         cur = con.cursor()
@@ -111,20 +117,22 @@ class Test(QMainWindow):
 # Profs - Tasks
 
 class Tasks(QMainWindow):
+    # темы тестов
     def __init__(self):
         super().__init__()
         uic.loadUi('profs.ui', self)
         # подгружаем дизайн
         self.btn_mainp.clicked.connect(self.back_to_main)
         for button in self.prof_buttons.buttons():
-            button.clicked.connect(self.open_journals)
+            button.clicked.connect(self.open_themed_tests)
+        print('tasks')
 
-    def open_journals(self):
+    def open_themed_tests(self):
         # открытие статей
         text = self.sender().text()
-        self.journ_window = Journals(text)
-        self.journ_window.show()
-        self.journ_window.move(self.pos())
+        self.themed_tests_window = Themed_Tests(text)
+        self.themed_tests_window.show()
+        self.themed_tests_window.move(self.pos())
         self.hide()
 
     def back_to_main(self):
@@ -137,6 +145,7 @@ class Tasks(QMainWindow):
 
 class Results(Tasks):
     # наследуется от класса Tasks, тк у них действует один и тот же метод возвращения в главное меню
+    # результат пробного тестирования
     def __init__(self, right, wrong_theme, pos_wnd=None):
         super().__init__()
         uic.loadUi('results.ui', self)
@@ -146,6 +155,7 @@ class Results(Tasks):
         self.pos_wnd = pos_wnd
         self.btn_mainr.clicked.connect(self.back_to_main)
         self.create_answer()
+        print('res')
 
     def create_answer(self):
         cur = con.cursor()
@@ -157,10 +167,11 @@ class Results(Tasks):
 у вас проблемы с темой(-ами): {a}""")
 
 
-class Journals(QMainWindow):
+class Themed_Tests(QMainWindow):
+    # тестирование по теме
     def __init__(self, name):
-        super(Journals, self).__init__()
-        uic.loadUi('journals.ui', self)
+        super(Themed_Tests, self).__init__()
+        uic.loadUi('themed_tests.ui', self)
         # подгружаем дизайн
         self.name = name
         self.btn_return.clicked.connect(self.back_to_tasks)
@@ -214,9 +225,9 @@ class Journals(QMainWindow):
 
     def back_to_tasks(self):
         # возвращает обратно к списку тем задач
-        self.profs_wnd = Tasks()
-        self.profs_wnd.show()
-        self.profs_wnd.move(self.pos())
+        self.tasks_wnd = Tasks()
+        self.tasks_wnd.show()
+        self.tasks_wnd.move(self.pos())
         self.close()
 
     def doSomething(self, num_question):
