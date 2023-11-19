@@ -98,25 +98,6 @@ QPushbutton:pressed {
        <height>379</height>
       </rect>
      </property>
-     <widget class="QScrollBar" name="verticalScrollBar">
-      <property name="geometry">
-       <rect>
-        <x>440</x>
-        <y>0</y>
-        <width>16</width>
-        <height>371</height>
-       </rect>
-      </property>
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
     </widget>
    </widget>
   </widget>

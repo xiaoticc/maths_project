@@ -33,7 +33,14 @@ class Possibilities(QMainWindow):
         # подгружаем дизайн
         self.btn_test.clicked.connect(self.open_test)
         self.btn_themes.clicked.connect(self.open_tasks)
+        self.btn_theory.clicked.connect(self.open_theory)
         print('possib')
+
+    def open_theory(self):
+        self.theory_window = Choose_theory()
+        self.theory_window.show()
+        self.theory_window.move(self.pos())
+        self.hide()
 
     def open_test(self):
         # открытие теста
@@ -152,6 +159,7 @@ class Tasks(QMainWindow):
         button = QPushButton(name, self)
         button.setMinimumHeight(150)
         button.setMinimumWidth(200)
+        button.setStyleSheet('background-color: rgb(145, 182, 182); border-width: 1px; border-radius: 15px;')
         button.clicked.connect(lambda x: self.open_themed_tests(name))
         button.setLayout(layout)
         return button
@@ -317,6 +325,87 @@ class Themed_test_answers(QMainWindow):
         self.tasks_wnd = Tasks()
         self.tasks_wnd.show()
         self.tasks_wnd.move(self.pos())
+        self.close()
+
+
+class Theory(Tasks):
+    def __init__(self, name):
+        super(Theory, self).__init__()
+        uic.loadUi('theory.ui', self)
+        # подгружаем дизайн
+        self.name = name
+        print(self.name)
+        self.btn_endt.clicked.connect(self.back_to_main)
+        self.set_text()
+
+    def set_text(self):
+        cur = con.cursor()
+        command = f"""SELECT theory FROM theory, tasks_theme
+                                                    WHERE id_theme = theme_id AND
+                                                    task_var = '{self.name}'"""
+
+        self.data = cur.execute(command).fetchall()
+
+        self.layout = QVBoxLayout()
+        self.layout.addWidget(self.create_ui_theory(self.data[0][0]))
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents.setLayout(self.layout)
+        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
+    def create_ui_theory(self, name):
+        layout = QVBoxLayout()
+        print(name)
+        label = QLabel(name)
+        label.setWordWrap(True)
+        label.setLayout(layout)
+        return label
+
+
+class Choose_theory(QMainWindow):
+    # темы тестов
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('profs.ui', self)
+        # подгружаем дизайн
+        self.btn_mainp.clicked.connect(self.back_to_main)
+        self.set_button()
+        print('tasks')
+
+    def open_themed_theory(self, text):
+        # открытие теории
+        self.themed_theory_window = Theory(text)
+        self.themed_theory_window.show()
+        self.themed_theory_window.move(self.pos())
+        self.hide()
+
+    def set_button(self):
+        cur = con.cursor()
+        command = f"""SELECT task_var FROM tasks_theme"""
+        self.data = cur.execute(command).fetchall()
+        self.layout = QVBoxLayout()
+        for i, el in enumerate(self.data):
+            self.layout.addWidget(self.create_ui_answer(el[0]))
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents.setLayout(self.layout)
+        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
+    def create_ui_answer(self, name):
+        layout = QVBoxLayout()
+        button = QPushButton(name, self)
+        button.setMinimumHeight(150)
+        button.setMinimumWidth(200)
+        button.setStyleSheet('background-color: rgb(145, 182, 182); border-width: 1px; border-radius: 15px;')
+        button.clicked.connect(lambda x: self.open_themed_theory(name))
+        button.setLayout(layout)
+        return button
+
+    def back_to_main(self):
+        # вернуться в главное меню
+        self.pos_wnd = Possibilities()
+        self.pos_wnd.show()
+        self.pos_wnd.move(self.pos())
         self.close()
 
 
