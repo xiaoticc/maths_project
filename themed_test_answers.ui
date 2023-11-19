@@ -49,13 +49,13 @@
      <string notr="true">color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>тренажер на тему:</string>
+     <string>ответы и решения</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_return">
     <property name="geometry">
      <rect>
-      <x>290</x>
+      <x>210</x>
       <y>450</y>
       <width>111</width>
       <height>41</height>
@@ -118,31 +118,6 @@ QPushbutton:pressed {
       </property>
      </widget>
     </widget>
-   </widget>
-   <widget class="QPushButton" name="btn_answ">
-    <property name="geometry">
-     <rect>
-      <x>110</x>
-      <y>450</y>
-      <width>111</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">QPushButton {
-	background-color: rgb(145, 182, 182);
-	border-width: 2px;
-	border-radius: 15px;
-}
-
-QPushbutton:pressed {
-	background-color: white
-
-}</string>
-    </property>
-    <property name="text">
-     <string>проверить ответы</string>
-    </property>
    </widget>
   </widget>
  </widget>

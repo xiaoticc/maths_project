@@ -32,7 +32,7 @@ class Possibilities(QMainWindow):
         uic.loadUi('possibilities.ui', self)
         # подгружаем дизайн
         self.btn_test.clicked.connect(self.open_test)
-        self.btn_prof.clicked.connect(self.open_tasks)
+        self.btn_themes.clicked.connect(self.open_tasks)
         print('possib')
 
     def open_test(self):
@@ -51,7 +51,7 @@ class Possibilities(QMainWindow):
 
 
 class Test(QMainWindow):
-    # тестирование
+    # пробное тестирование по одной задачке из кажого модуля
     def __init__(self):
         super().__init__()
         uic.loadUi('test.ui', self)
@@ -65,24 +65,28 @@ class Test(QMainWindow):
         self.data = cur.execute("""SELECT * FROM task_answer, tasks_theme
                                     WHERE theme_id = task_id AND
                                     temp_answer = 1""").fetchall()
-        # print(self.data)
         self.layout = QVBoxLayout()
 
         for i, el in enumerate(self.data):
             self.layout.addWidget(self.create_ui_answer(i + 1, el[2]))
             print(el)
+            # i - номер задачи (но тк в циклах идет счет с нуля, то приходится в функции вызывать i + 1) el -
+            # значения таблицы с задачами и с блоками задач(отобранные в нужном формате в self.data) с заданиями
+            # ответами и решениями(т.е. в el хранятся значения: айди задания, айди блока заданий, само задание,
+            # решение, ответ, а также внешний ключ по которому связан блок заданий и само задание и сортировка на
+            # тестовые и общие задания(0 или 1))
+
         self.scrollArea.setWidgetResizable(True)
-        # self.scrollArea.setLayout(layout)
         self.scrollAreaWidgetContents_2.setLayout(self.layout)
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
-    def create_ui_answer(self, num, name):
+    def create_ui_answer(self, num, condit):
         layout = QVBoxLayout()
         groupBox = QGroupBox(f"Вопрос {num}")
         groupBox.setMinimumHeight(200)
         groupBox.setMinimumWidth(300)
-        label = QLabel(name, self)
+        label = QLabel(condit, self)
         label.setWordWrap(True)
         line_edit = QLineEdit(self)
         layout.addWidget(label)
@@ -98,9 +102,8 @@ class Test(QMainWindow):
         self.hide()
 
     def results(self):
-        cur = con.cursor()
         counter_right = 0
-        wrong_theme = [0, 0, 0]
+        wrong_theme = [0 for i in range(len(self.data))]
         for i, el in enumerate(self.data):
             box = self.layout.itemAt(i).widget()
             line = box.findChildren(QLineEdit)[0]
@@ -111,10 +114,7 @@ class Test(QMainWindow):
             else:
                 wrong_theme[int(el[1]) - 1] += 1
         return counter_right, wrong_theme
-        # print(self.layout.itemAt(0).widget().findChildren(QLineEdit)[0].text())
 
-
-# Profs - Tasks
 
 class Tasks(QMainWindow):
     # темы тестов
@@ -123,17 +123,38 @@ class Tasks(QMainWindow):
         uic.loadUi('profs.ui', self)
         # подгружаем дизайн
         self.btn_mainp.clicked.connect(self.back_to_main)
-        for button in self.prof_buttons.buttons():
-            button.clicked.connect(self.open_themed_tests)
+        self.set_button()
         print('tasks')
 
-    def open_themed_tests(self):
+    def open_themed_tests(self, text):
         # открытие статей
-        text = self.sender().text()
-        self.themed_tests_window = Themed_Tests(text)
+        self.themed_tests_window = Themed_tests(text)
         self.themed_tests_window.show()
         self.themed_tests_window.move(self.pos())
         self.hide()
+
+    def set_button(self):
+        cur = con.cursor()
+        command = f"""SELECT task_var FROM tasks_theme"""
+        self.data = cur.execute(command).fetchall()
+        self.layout = QVBoxLayout()
+
+        for i, el in enumerate(self.data):
+            print(el[0])
+            self.layout.addWidget(self.create_ui_answer(el[0]))
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents.setLayout(self.layout)
+        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
+    def create_ui_answer(self, name):
+        layout = QVBoxLayout()
+        button = QPushButton(name, self)
+        button.setMinimumHeight(150)
+        button.setMinimumWidth(200)
+        button.clicked.connect(lambda x: self.open_themed_tests(name))
+        button.setLayout(layout)
+        return button
 
     def back_to_main(self):
         # вернуться в главное меню
@@ -167,36 +188,29 @@ class Results(Tasks):
 у вас проблемы с темой(-ами): {a}""")
 
 
-class Themed_Tests(QMainWindow):
+class Themed_tests(QMainWindow):
     # тестирование по теме
     def __init__(self, name):
-        super(Themed_Tests, self).__init__()
+        super(Themed_tests, self).__init__()
         uic.loadUi('themed_tests.ui', self)
         # подгружаем дизайн
         self.name = name
         self.btn_return.clicked.connect(self.back_to_tasks)
+        self.btn_answ.clicked.connect(self.answers)
         self.set_task()
-        # for el in self.layout.itemAt(0).widget().findChildren(QLineEdit):
-        #     print(1)
 
     def set_task(self):
         cur = con.cursor()
-        # task = self.name
         command = f"""SELECT * FROM task_answer, tasks_theme
                                     WHERE theme_id = task_id AND
                                     temp_answer = 0 AND
                                     task_var = '{self.name}'"""
-        # self.data = cur.execute("""SELECT * FROM task_answer, tasks_theme
-        #                             WHERE theme_id = task_id AND
-        #                             temp_answer = 0 AND
-        #                             task_var =:task""", {"task": task}).fetchall()
         self.data = cur.execute(command).fetchall()
         self.layout = QVBoxLayout()
 
         for i, el in enumerate(self.data):
             self.layout.addWidget(self.create_ui_answer(i + 1, el[2]))
         self.scrollArea.setWidgetResizable(True)
-        # self.scrollArea.setLayout(layout)
         self.scrollAreaWidgetContents.setLayout(self.layout)
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
@@ -204,22 +218,14 @@ class Themed_Tests(QMainWindow):
     def create_ui_answer(self, num, name):
         layout = QVBoxLayout()
         groupBox = QGroupBox(f"Вопрос {num}")
-        # print(num)
         self.label.setText(f'Тренажер на тему: {self.name}')
         groupBox.setMinimumHeight(200)
         groupBox.setMinimumWidth(300)
         label = QLabel(name, self)
         label.setWordWrap(True)
         self.line_edit = QLineEdit(self)
-        # сделать QPushButton и по нажатию на кнопку переходить на doSomething или!! оставить изменение цвета,
-        # при вводе правильного или неправильного ответа,а на кнопку сделать показ решения
-        # событие на изменение line_edit
-        self.btn_answ = QPushButton("Правильный ответ", self)
-        self.line_edit.textChanged.connect(lambda x: self.doSomething(num - 1))
-        self.btn_answ.clicked.connect(lambda x: self.show_solution(num - 1))
         layout.addWidget(label)
         layout.addWidget(self.line_edit)
-        layout.addWidget(self.btn_answ)
         groupBox.setLayout(layout)
         return groupBox
 
@@ -230,29 +236,88 @@ class Themed_Tests(QMainWindow):
         self.tasks_wnd.move(self.pos())
         self.close()
 
-    def doSomething(self, num_question):
-        # ПОМЕНЯТЬ!! может быть сделать MessageBox, для создания всплывающего окна,
-        # которое будет показывать правильный ответ после нажатия на кнопку проверить ответ
-        # кстати, можно в messagebox поместить кнопку, которая будет показывать решение задачи
-        # (если в модулях будет решение, написанное словами, а не картинками)
-        user_answer = self.sender().text()
-        right_answer = str(self.data[num_question][3])
-        print(right_answer, user_answer, self.data[num_question][3])
-        if user_answer == right_answer:
-            self.sender().setStyleSheet("color: rgb(0, 255, 0);")
+    def results(self):
+        answer = []
+        for i, el in enumerate(self.data):
+            box = self.layout.itemAt(i).widget()
+            line = box.findChildren(QLineEdit)[0]
+            answer.append(line.text())
+
+        print(answer)
+        return answer
+
+    def answers(self, num_question):
+        self.tasks_answ = Themed_test_answers(self.results(), self.name)
+        self.tasks_answ.show()
+        self.tasks_answ.move(self.pos())
+        self.close()
+
+
+class Themed_test_answers(QMainWindow):
+    def __init__(self, answers, name):
+        super(Themed_test_answers, self).__init__()
+        uic.loadUi('themed_test_answers.ui', self)
+        # подгружаем дизайн
+        self.answers = answers
+        self.name = name
+        cur = con.cursor()
+        command = f"""SELECT * FROM task_answer, tasks_theme
+                                            WHERE theme_id = task_id AND
+                                            temp_answer = 0 AND
+                                            task_var = '{self.name}'"""
+
+        self.data = cur.execute(command).fetchall()
+        self.btn_return.clicked.connect(self.back_to_tasks)
+        self.set_task()
+        print(self.data)
+
+    def set_task(self):
+        self.layout = QVBoxLayout()
+
+        for i, el in enumerate(self.data):
+            self.layout.addWidget(self.create_ui_answer(i + 1, el[2]))
+        self.scrollArea.setWidgetResizable(True)
+        self.scrollAreaWidgetContents.setLayout(self.layout)
+        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+
+    def create_ui_answer(self, num, name):
+        layout = QVBoxLayout()
+        groupBox = QGroupBox(f"Вопрос {num}")
+        self.label.setText(f'Ответы')
+        groupBox.setMinimumHeight(200)
+        groupBox.setMinimumWidth(300)
+
+        label_task = QLabel(name, self)
+        label_task.setWordWrap(True)
+        layout.addWidget(label_task)
+
+        label_sol = QLabel(self.data[num - 1][4])
+        label_sol.setWordWrap(True)
+        layout.addWidget(label_sol)
+
+        label_res = QLabel(f'Правильный ответ: {self.data[num - 1][3]}')
+        label_res.setWordWrap(True)
+        layout.addWidget(label_res)
+        if str(self.data[num - 1][3]) == self.answers[num - 1]:
+            label_res = QLabel(f'Введенный ответ: {self.answers[num - 1]}')
+            label_res.setStyleSheet("color: rgb(0, 255, 0);")
+            label_res.setWordWrap(True)
+            layout.addWidget(label_res)
         else:
-            self.sender().setStyleSheet("color: rgb(255, 0, 0);")
+            label_res = QLabel(f'Введенный ответ: {self.answers[num - 1]}')
+            label_res.setStyleSheet("color: rgb(255, 0, 0);")
+            label_res.setWordWrap(True)
+            layout.addWidget(label_res)
+        groupBox.setLayout(layout)
+        return groupBox
 
-    def show_solution(self, num_question):
-        solution_box = QMessageBox()
-        solution_box.setWindowTitle("решение")
-        solution = str(self.data[num_question][4])
-        solution_box.setText("Здесь могло быть ваше решение")
-        solution_box.setStandardButtons(QMessageBox.Ok)
-        solution_box.setInformativeText(solution)
-        solution_box.setDetailedText('детали детали')
-
-        solution_box.exec_()
+    def back_to_tasks(self):
+        # возвращает обратно к списку тем задач
+        self.tasks_wnd = Tasks()
+        self.tasks_wnd.show()
+        self.tasks_wnd.move(self.pos())
+        self.close()
 
 
 # нужная вещь для отображения ошибок не кодами возврата

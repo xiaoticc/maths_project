@@ -104,7 +104,7 @@ QPushbutton:pressed {
 }</string>
      </property>
      <property name="text">
-      <string>войти</string>
+      <string>открыть</string>
      </property>
     </widget>
    </widget>

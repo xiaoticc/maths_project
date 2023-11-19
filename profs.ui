@@ -58,148 +58,6 @@
      <string>ДОСТУПНЫЕ ТЕМЫ ТЕСТОВ:</string>
     </property>
    </widget>
-   <widget class="QWidget" name="verticalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>140</x>
-      <y>60</y>
-      <width>320</width>
-      <height>471</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout">
-     <property name="spacing">
-      <number>30</number>
-     </property>
-     <property name="sizeConstraint">
-      <enum>QLayout::SetMaximumSize</enum>
-     </property>
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <property name="topMargin">
-      <number>0</number>
-     </property>
-     <property name="rightMargin">
-      <number>0</number>
-     </property>
-     <property name="bottomMargin">
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QPushButton" name="btn_pr1">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
-	background-color: rgb(145, 182, 182);
-	border-width: 2px;
-	border-radius: 15px;
-}
-
-</string>
-       </property>
-       <property name="text">
-        <string>быстрый счет</string>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">prof_buttons</string>
-       </attribute>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btn_pr2">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
-	background-color: rgb(145, 182, 182);
-	border-width: 10px;
-	border-radius: 15px;
-}
-
-QPushbutton:pressed {
-	background-color: white
-
-}</string>
-       </property>
-       <property name="text">
-        <string>комбинаторика</string>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">prof_buttons</string>
-       </attribute>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btn_pr3">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
-	background-color: rgb(145, 182, 182);
-	border-width: 2px;
-	border-radius: 15px;
-}
-
-QPushbutton:pressed {
-	background-color: white
-
-}</string>
-       </property>
-       <property name="text">
-        <string>переливания</string>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">prof_buttons</string>
-       </attribute>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="btn_pr4">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
-	background-color: rgb(145, 182, 182);
-	border-width: 2px;
-	border-radius: 15px;
-}
-
-QPushbutton:pressed {
-	background-color: white
-
-}</string>
-       </property>
-       <property name="text">
-        <string>еще модули  пока что в доработке</string>
-       </property>
-       <attribute name="buttonGroup">
-        <string notr="true">prof_buttons</string>
-       </attribute>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QPushButton" name="btn_mainp">
     <property name="geometry">
      <rect>
@@ -225,11 +83,44 @@ QPushbutton:pressed {
      <string>на главную</string>
     </property>
    </widget>
+   <widget class="QScrollArea" name="scrollArea">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>50</y>
+      <width>391</width>
+      <height>501</height>
+     </rect>
+    </property>
+    <property name="widgetResizable">
+     <bool>true</bool>
+    </property>
+    <widget class="QWidget" name="scrollAreaWidgetContents">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>389</width>
+       <height>499</height>
+      </rect>
+     </property>
+     <widget class="QScrollBar" name="verticalScrollBar">
+      <property name="geometry">
+       <rect>
+        <x>370</x>
+        <y>0</y>
+        <width>20</width>
+        <height>501</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+    </widget>
+   </widget>
   </widget>
  </widget>
  <resources/>
  <connections/>
- <buttongroups>
-  <buttongroup name="prof_buttons"/>
- </buttongroups>
 </ui>
