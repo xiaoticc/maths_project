@@ -31,89 +31,27 @@
     <height>577</height>
    </size>
   </property>
+  <property name="font">
+   <font>
+    <family>Yu Gothic UI</family>
+    <pointsize>9</pointsize>
+    <weight>75</weight>
+    <bold>true</bold>
+   </font>
+  </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <property name="styleSheet">
-   <string notr="true">background-color:#608d8c</string>
+   <string notr="true">background-color:#f4fcff</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QFrame" name="frame">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>100</y>
-      <width>451</width>
-      <height>491</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="minimumSize">
-     <size>
-      <width>451</width>
-      <height>491</height>
-     </size>
-    </property>
-    <property name="maximumSize">
-     <size>
-      <width>451</width>
-      <height>491</height>
-     </size>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: #405e5e</string>
-    </property>
-    <property name="frameShape">
-     <enum>QFrame::StyledPanel</enum>
-    </property>
-    <property name="frameShadow">
-     <enum>QFrame::Raised</enum>
-    </property>
-    <widget class="QPushButton" name="btn_ent">
-     <property name="geometry">
-      <rect>
-       <x>80</x>
-       <y>130</y>
-       <width>281</width>
-       <height>171</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <family>Myanmar Text</family>
-       <pointsize>10</pointsize>
-       <weight>50</weight>
-       <bold>false</bold>
-      </font>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QPushButton {
-	background-color: rgb(145, 182, 182);
-	border-width: 2px;
-	border-radius: 15px;
-}
-
-QPushbutton:pressed {
-	background-color: white
-
-}</string>
-     </property>
-     <property name="text">
-      <string>открыть</string>
-     </property>
-    </widget>
-   </widget>
    <widget class="QLabel" name="title">
     <property name="geometry">
      <rect>
-      <x>50</x>
+      <x>90</x>
       <y>30</y>
-      <width>351</width>
+      <width>281</width>
       <height>31</height>
      </rect>
     </property>
@@ -125,7 +63,7 @@ QPushbutton:pressed {
     </property>
     <property name="font">
      <font>
-      <family>Nirmala UI</family>
+      <family>Yu Gothic UI</family>
       <pointsize>16</pointsize>
       <weight>75</weight>
       <bold>true</bold>
@@ -136,11 +74,186 @@ QPushbutton:pressed {
      <enum>Qt::LeftToRight</enum>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(255, 255, 255);
+     <string notr="true">color: rgb(0,0, 0);
 </string>
     </property>
     <property name="text">
-     <string>тренажер задач по математике</string>
+     <string>тренажер по математике</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_ent">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>250</y>
+      <width>161</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Yu Gothic UI</family>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+	background-color:#96ade5;
+	border-width: 2px;
+	border-radius: 15px;
+}
+
+
+</string>
+    </property>
+    <property name="text">
+     <string>открыть</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>90</y>
+      <width>411</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Sitka</family>
+      <pointsize>12</pointsize>
+      <weight>50</weight>
+      <italic>false</italic>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="mouseTracking">
+     <bool>true</bool>
+    </property>
+    <property name="tabletTracking">
+     <bool>false</bool>
+    </property>
+    <property name="text">
+     <string>&quot;Математика - это язык, на котором написана книга природы&quot;</string>
+    </property>
+    <property name="textFormat">
+     <enum>Qt::AutoText</enum>
+    </property>
+    <property name="textInteractionFlags">
+     <set>Qt::NoTextInteraction</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>140</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>(Г. Галилей)</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>440</y>
+      <width>111</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Yu Gothic UI</family>
+      <pointsize>11</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Авторы:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>470</y>
+      <width>251</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Yu Gothic UI</family>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Медведева Александра</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_5">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>490</y>
+      <width>271</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Yu Gothic UI</family>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Ломакина Мария</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_6">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>510</y>
+      <width>261</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Yu Gothic UI</family>
+      <pointsize>9</pointsize>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Григорьева Анжелика</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_7">
+    <property name="geometry">
+     <rect>
+      <x>110</x>
+      <y>540</y>
+      <width>281</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string> ГБОУ гимназия №642 &quot;Земля и Вселенная&quot; </string>
     </property>
    </widget>
   </widget>

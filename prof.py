@@ -88,7 +88,7 @@ class Test(QMainWindow):
             # тестовые и общие задания(0 или 1))
 
         self.scrollArea.setWidgetResizable(True)
-        self.scrollAreaWidgetContents_2.setLayout(self.layout)
+        self.scrollAreaWidgetContents.setLayout(self.layout)
         self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
@@ -114,6 +114,7 @@ class Test(QMainWindow):
 
     def results(self):
         counter_right = 0
+        counter = 0
         wrong_theme = [0 for i in range(len(self.data))]
         for i, el in enumerate(self.data):
             box = self.layout.itemAt(i).widget()
@@ -124,7 +125,8 @@ class Test(QMainWindow):
                 counter_right += 1
             else:
                 wrong_theme[int(el[1]) - 1] += 1
-        return counter_right, wrong_theme
+            counter += 1
+        return counter, counter_right, wrong_theme
 
 
 class Tasks(QMainWindow):
@@ -162,9 +164,9 @@ class Tasks(QMainWindow):
     def create_ui_answer(self, name):
         layout = QVBoxLayout()
         button = QPushButton(name, self)
-        button.setMinimumHeight(150)
-        button.setMinimumWidth(200)
-        button.setStyleSheet('background-color: rgb(145, 182, 182); border-width: 1px; border-radius: 15px;')
+        button.setMinimumHeight(100)
+        button.setMinimumWidth(181)
+        button.setStyleSheet('background-color: #bac2da; border-width: 2px; border-radius: 15px;')
         button.clicked.connect(lambda x: self.open_themed_tests(name))
         button.setLayout(layout)
         return button
@@ -180,11 +182,12 @@ class Tasks(QMainWindow):
 class Results(Tasks):
     # наследуется от класса Tasks, тк у них действует один и тот же метод возвращения в главное меню
     # результат пробного тестирования
-    def __init__(self, right, wrong_theme, pos_wnd=None):
+    def __init__(self, all, right, wrong_theme, pos_wnd=None):
         super().__init__()
         uic.loadUi('results.ui', self)
         # подгружаем дизайн
         self.setWindowTitle("math simulator")
+        self.all = all
         self.right = right
         self.wrong_theme = wrong_theme
         self.pos_wnd = pos_wnd
@@ -197,9 +200,11 @@ class Results(Tasks):
         themes = cur.execute("""SELECT task_var FROM tasks_theme""").fetchall()
         themes = [el[0] for el in themes]
         a = '\n'.join([themes[el] for el in range(len(self.wrong_theme)) if self.wrong_theme[el] != 0])
-        self.label_2.setText(f"""количество правильных ответов: {self.right} 
-количество неправильных ответов: {sum(self.wrong_theme)}
-у вас проблемы с темой(-ами): {a}""")
+        self.label_2.setText(f"""вы набрали: {self.right} из {self.all}
+{sum(self.wrong_theme)} неправильных ответов
+повторите тему(-ы): 
+{a}""")
+        self.label_2.setStyleSheet("color: rgb(0, 0, 0)")
 
 
 class Themed_tests(QMainWindow):
@@ -313,16 +318,17 @@ class Themed_test_answers(QMainWindow):
         layout.addWidget(label_sol)
 
         label_res = QLabel(f'Правильный ответ: {self.data[num - 1][3]}')
+        label_res.setStyleSheet("color: #32a738;")
         label_res.setWordWrap(True)
         layout.addWidget(label_res)
         if str(self.data[num - 1][3]) == self.answers[num - 1]:
             label_res = QLabel(f'Введенный ответ: {self.answers[num - 1]}')
-            label_res.setStyleSheet("color: rgb(0, 255, 0);")
+            label_res.setStyleSheet("color: #32a738;")
             label_res.setWordWrap(True)
             layout.addWidget(label_res)
         else:
             label_res = QLabel(f'Введенный ответ: {self.answers[num - 1]}')
-            label_res.setStyleSheet("color: rgb(255, 0, 0);")
+            label_res.setStyleSheet("color: #c21518;")
             label_res.setWordWrap(True)
             layout.addWidget(label_res)
         groupBox.setLayout(layout)
@@ -418,9 +424,9 @@ class Choose_theory(QMainWindow):
     def create_ui_answer(self, name):
         layout = QVBoxLayout()
         button = QPushButton(name, self)
-        button.setMinimumHeight(150)
-        button.setMinimumWidth(200)
-        button.setStyleSheet('background-color: rgb(145, 182, 182); border-width: 1px; border-radius: 15px;')
+        button.setMinimumHeight(100)
+        button.setMinimumWidth(181)
+        button.setStyleSheet('background-color: #bac2da; border-width: 1px; border-radius: 15px;')
         button.clicked.connect(lambda x: self.open_themed_theory(name))
         button.setLayout(layout)
         return button
