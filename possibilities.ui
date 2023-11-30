@@ -59,11 +59,12 @@
 	color: white;
 	border-width: 2px;
 	border-radius: 15px;
+	wordwrap: True
 }
 </string>
     </property>
     <property name="text">
-     <string>ПРОЙТИ ПРОБНОЕ ТЕСТИРОВАНИЕ</string>
+     <string> ПРОБНОЕ ТЕСТИРОВАНИЕ</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_themes">
@@ -95,7 +96,7 @@ QPushbutton:pressed {
 }</string>
     </property>
     <property name="text">
-     <string>ВЫБРАТЬ ТЕМУ ТЕСТА</string>
+     <string>ТЕСТЫ ПО ТЕМАМ</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_theory">

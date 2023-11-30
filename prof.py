@@ -2,8 +2,9 @@ import sys
 import sqlite3
 from PyQt5.QtCore import Qt, QSize
 from PyQt5 import uic
+from PyQt5.QtGui import QPalette
 from PyQt5.QtWidgets import QApplication, QMainWindow, QScrollArea, QGroupBox, QLabel, QLineEdit, QVBoxLayout, \
-    QPushButton, QMessageBox
+    QPushButton, QMessageBox, QTextEdit
 
 con = sqlite3.connect("maths_db.sqlite")
 
@@ -14,6 +15,7 @@ class Main(QMainWindow):
         super().__init__()
         uic.loadUi('main.ui', self)
         # подгружаем дизайн
+        self.setWindowTitle("math simulator")
         self.btn_ent.clicked.connect(self.open_pos)
         print('main')
 
@@ -26,11 +28,12 @@ class Main(QMainWindow):
 
 
 class Possibilities(QMainWindow):
-    # пройти тест - перейти к заданиям
+    # пройти тест - перейти к заданиям - изучить теорию
     def __init__(self):
         super().__init__()
         uic.loadUi('possibilities.ui', self)
         # подгружаем дизайн
+        self.setWindowTitle("math simulator")
         self.btn_test.clicked.connect(self.open_test)
         self.btn_themes.clicked.connect(self.open_tasks)
         self.btn_theory.clicked.connect(self.open_theory)
@@ -63,6 +66,7 @@ class Test(QMainWindow):
         super().__init__()
         uic.loadUi('test.ui', self)
         # подгружаем дизайн
+        self.setWindowTitle("math simulator")
         self.btn_endt.clicked.connect(self.open_res)
         self.set_temp_task()
         print('test')
@@ -129,6 +133,7 @@ class Tasks(QMainWindow):
         super().__init__()
         uic.loadUi('profs.ui', self)
         # подгружаем дизайн
+        self.setWindowTitle("math simulator")
         self.btn_mainp.clicked.connect(self.back_to_main)
         self.set_button()
         print('tasks')
@@ -179,6 +184,7 @@ class Results(Tasks):
         super().__init__()
         uic.loadUi('results.ui', self)
         # подгружаем дизайн
+        self.setWindowTitle("math simulator")
         self.right = right
         self.wrong_theme = wrong_theme
         self.pos_wnd = pos_wnd
@@ -202,6 +208,7 @@ class Themed_tests(QMainWindow):
         super(Themed_tests, self).__init__()
         uic.loadUi('themed_tests.ui', self)
         # подгружаем дизайн
+        self.setWindowTitle("math simulator")
         self.name = name
         self.btn_return.clicked.connect(self.back_to_tasks)
         self.btn_answ.clicked.connect(self.answers)
@@ -266,6 +273,7 @@ class Themed_test_answers(QMainWindow):
         super(Themed_test_answers, self).__init__()
         uic.loadUi('themed_test_answers.ui', self)
         # подгружаем дизайн
+        self.setWindowTitle("math simulator")
         self.answers = answers
         self.name = name
         cur = con.cursor()
@@ -333,10 +341,21 @@ class Theory(Tasks):
         super(Theory, self).__init__()
         uic.loadUi('theory.ui', self)
         # подгружаем дизайн
+        self.setWindowTitle("math simulator")
         self.name = name
+        self.label = ''
         print(self.name)
         self.btn_endt.clicked.connect(self.back_to_main)
+        self.btn_themes.clicked.connect(self.back_to_themes)
+        self.btn_test.clicked.connect(self.open_test)
         self.set_text()
+
+    def open_test(self):
+        # открытие статей
+        self.themed_tests_window = Themed_tests(self.name)
+        self.themed_tests_window.show()
+        self.themed_tests_window.move(self.pos())
+        self.hide()
 
     def set_text(self):
         cur = con.cursor()
@@ -345,21 +364,25 @@ class Theory(Tasks):
                                                     task_var = '{self.name}'"""
 
         self.data = cur.execute(command).fetchall()
-
-        self.layout = QVBoxLayout()
-        self.layout.addWidget(self.create_ui_theory(self.data[0][0]))
-        self.scrollArea.setWidgetResizable(True)
-        self.scrollAreaWidgetContents.setLayout(self.layout)
-        self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+        self.scrollArea.setWidget(self.create_ui_theory(self.data[0][0]))
+        # self.scrollArea.setWidgetResizable(True)
+        # self.scrollAreaWidgetContents.setLayout(self.layout)
+        # self.scrollArea.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
+        # self.scrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
 
     def create_ui_theory(self, name):
-        layout = QVBoxLayout()
+        text_edit = QTextEdit()
         print(name)
-        label = QLabel(name)
-        label.setWordWrap(True)
-        label.setLayout(layout)
-        return label
+        text_edit.setText(name)
+        text_edit.setReadOnly(True)
+        text_edit.setTextInteractionFlags(Qt.NoTextInteraction)
+        return text_edit
+
+    def back_to_themes(self):
+        self.choose_wnd = Choose_theory()
+        self.choose_wnd.show()
+        self.choose_wnd.move(self.pos())
+        self.close()
 
 
 class Choose_theory(QMainWindow):
@@ -368,6 +391,7 @@ class Choose_theory(QMainWindow):
         super().__init__()
         uic.loadUi('profs.ui', self)
         # подгружаем дизайн
+        self.setWindowTitle("math simulator")
         self.btn_mainp.clicked.connect(self.back_to_main)
         self.set_button()
         print('tasks')

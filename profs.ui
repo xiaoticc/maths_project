@@ -38,9 +38,9 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>150</x>
+      <x>190</x>
       <y>0</y>
-      <width>361</width>
+      <width>221</width>
       <height>61</height>
      </rect>
     </property>
@@ -55,7 +55,7 @@
      <string notr="true">color: rgb(255, 255, 255);</string>
     </property>
     <property name="text">
-     <string>ДОСТУПНЫЕ ТЕМЫ ТЕСТОВ:</string>
+     <string>ДОСТУПНЫЕ ТЕМЫ:</string>
     </property>
    </widget>
    <widget class="QPushButton" name="btn_mainp">
